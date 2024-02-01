@@ -45,7 +45,7 @@ The kernel assigns the DIP switches as follows:
 3. Enable SLIP based networking
 4. Feather board installed (eg Huzzah 8266 WiFi)
 5. SIDs are installed
-6. F256: CBM keyboard installed; F256k: audio expansion installed.
+6. F256: CBM keyboard installed; F256k: reduced TCP window size.
 7. ON: 640x480, OFF: 640x400 (_not yet implemented_)
 8. Enable gamma color correction
 
@@ -1004,19 +1004,21 @@ Copies the user provided text buffer to the screen (from top to bottom) starting
 Returns the current time from the RTC.
 
 **Input**
-
-None.
+* **kernel.args.buf** points to a user time_t buffer.
+* **kernel.args.buflen** contains the number of bytes to copy (should be size of time_t).
 
 **Output**
 
-* **kernel.args.century** contains the two digit century in BCD.
-* **kernel.args.year** contains the two digit year of the century in BCD.
-* **kernel.args.month** contains the two digit month (1-12) in BCD.
-* **kernel.args.day** contains the two digit day of the month in BCD.
-* **kernel.args.hours** contains the two digit hour (0-23) in BCD.
-* **kernel.args.minutes** contains the two digit minute (0-59) in BCD.
-* **kernel.args.seconds** contains the two digit second (0-60) in BCD.
-* **kernel.args.centis** contains the two digit centi-second in BCD.
+User's buffer is populated: 
+
+* **century** contains the two digit century in BCD.
+* **year** contains the two digit year of the century in BCD.
+* **month** contains the two digit month (1-12) in BCD.
+* **day** contains the two digit day of the month in BCD.
+* **hours** contains the two digit hour (0-23) in BCD.
+* **minutes** contains the two digit minute (0-59) in BCD.
+* **seconds** contains the two digit second (0-60) in BCD.
+* **centis** contains the two digit centi-second in BCD.
 
 
 ### Clock.SetTimer
@@ -1025,7 +1027,7 @@ Schedules a timer on either the FRAME interrupt or RTC seconds interrupt.
 
 **Input**
 
-* **kernel.args.timer.units** selects the queueu to schedule: **kernel.args.timer.FRAME** or **kernel.args.timer.SECONDS**.  ORing with **kernel.args.timer.QUERY** causes the call to return the current value of the given counter without scheduling an event.
+* **kernel.args.timer.units** selects the queueu to schedule: **kernel.args.timer.FRAMES** or **kernel.args.timer.SECONDS**.  ORing with **kernel.args.timer.QUERY** causes the call to return the current value of the given counter without scheduling an event.
 * **kernel.args.timer.absolute** contains the time value at which the kernel will queue the event.
 * **kernel.args.timer.cookie** contains the cookie to associate with the event once scheduled**
 
